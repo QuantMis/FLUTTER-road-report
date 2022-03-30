@@ -5,6 +5,7 @@ import 'package:awaslubang/screens/base.dart';
 import 'package:awaslubang/screens/pothole_near_me.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:awaslubang/screens/take_picture.dart';
 
 void main() {
   runApp(MyApp());

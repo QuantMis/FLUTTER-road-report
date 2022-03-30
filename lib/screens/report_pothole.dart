@@ -8,6 +8,7 @@ import 'package:awaslubang/services/geolocator_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:awaslubang/screens/take_picture.dart';
 
 class ReportPotholeScreen extends StatefulWidget {
   const ReportPotholeScreen({Key? key}) : super(key: key);
@@ -22,9 +23,14 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
   late GoogleMapController _controller;
   var location = Get.arguments[0];
 
+  //report data
+  late double _latitude;
+  late double _longitude;
+
   void _onMapCreated(GoogleMapController _cntlr) async {
     var location = await geolocatorService().determinePosition();
-    print(location);
+    _latitude = location.latitude;
+    _longitude = location.longitude;
     _controller = _cntlr;
     _controller.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -47,7 +53,6 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
 
     var m =
         markers.firstWhere((p) => p.markerId == MarkerId('custom_marker_1'));
-    log(m.toString());
     markers.remove(m);
     markers.add(
       Marker(
@@ -56,7 +61,15 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         draggable: true,
       ),
     );
-    setState(() {});
+    setState(() {
+      _latitude = _position.target.latitude;
+      _longitude = _position.target.longitude;
+    });
+  }
+
+  void _takePhoto() async {
+    var address = await placemarkFromCoordinates(_latitude, _longitude);
+    Get.to(TakePictureScreen(), arguments: [_latitude, _longitude, address]);
   }
 
   @override
@@ -74,7 +87,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
         title: Text(
-          "Pothole Near Me",
+          "Pin Pothole Location",
           style: TextStyle(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.w100),
         ),
@@ -105,9 +118,9 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Get.to(ReportPotholeScreen());
+          _takePhoto();
         },
-        label: const Text('Confirm'),
+        label: const Text('Take Photo'),
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:awaslubang/screens/report_pothole.dart';
+import 'package:http/http.dart' as http;
 
 class PotholeNearMeScreen extends StatefulWidget {
   const PotholeNearMeScreen({Key? key}) : super(key: key);
@@ -22,6 +23,7 @@ class _PotholeNearMeState extends State<PotholeNearMeScreen> {
   final Set<Marker> markers = new Set();
   late GoogleMapController _controller;
   late Position location;
+  var aduans = [];
 
   void _onMapCreated(GoogleMapController _cntlr) async {
     location = await geolocatorService().determinePosition();
@@ -34,8 +36,18 @@ class _PotholeNearMeState extends State<PotholeNearMeScreen> {
     );
   }
 
+  void _getPotholeNearMe() async {
+    var url = Uri.parse("http://74b6a5b63136ac.lhrtunnel.link/aduan/");
+    var response = await http.get(url);
+
+    setState(() {
+      aduans = json.decode(response.body);
+    });
+  }
+
   @override
   void initState() {
+    _getPotholeNearMe();
     super.initState();
   }
 
@@ -73,23 +85,21 @@ class _PotholeNearMeState extends State<PotholeNearMeScreen> {
   }
 
   Set<Marker> getmarkers() {
-    //Latitude: 3.1096663, Longitude: 101.6693742
-
     setState(() {
-      markers.add(Marker(
-        //add first marker
-        markerId: MarkerId("custom_marker_1"),
-        position: LatLng(3.1100000, 101.660000), //position of marker
-        infoWindow: InfoWindow(
-          //popup info
-          title: 'Marker Title First ',
-          snippet: 'My Custom Subtitle',
-        ),
-        onTap: () {
-          log("test");
-        },
-        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
-      ));
+      for (int i = 0; i < aduans.length; i++)
+        markers.add(Marker(
+          markerId: MarkerId("custom_marker_${i}"),
+          position: LatLng(double.parse(aduans[i]['latitude']),
+              double.parse(aduans[i]['longitude'])), //position of marker
+          infoWindow: InfoWindow(
+            title: 'Marker Title First ',
+            snippet: 'My Custom Subtitle',
+          ),
+          onTap: () {
+            log("test");
+          },
+          icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        ));
     });
     return markers;
   }
