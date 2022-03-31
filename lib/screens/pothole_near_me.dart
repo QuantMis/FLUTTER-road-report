@@ -37,7 +37,7 @@ class _PotholeNearMeState extends State<PotholeNearMeScreen> {
   }
 
   void _getPotholeNearMe() async {
-    var url = Uri.parse("http://74b6a5b63136ac.lhrtunnel.link/aduan/");
+    var url = Uri.parse("http://5101-219-92-148-53.ngrok.io/aduan/");
     var response = await http.get(url);
 
     setState(() {
@@ -81,6 +81,7 @@ class _PotholeNearMeState extends State<PotholeNearMeScreen> {
         label: const Text('I Found a Hole!'),
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

@@ -96,7 +96,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         // zoomGesturesEnabled: true,
         initialCameraPosition: CameraPosition(
             target: LatLng(location.latitude, location.longitude), zoom: 25),
-        mapType: MapType.hybrid,
+        mapType: MapType.normal,
         markers: getmarkers(),
         // markers: Set<Marker>.of(
         //   <Marker>[
@@ -123,6 +123,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         label: const Text('Take Photo'),
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

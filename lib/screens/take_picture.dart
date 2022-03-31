@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:awaslubang/screens/create_report_success.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({Key? key, this.title}) : super(key: key);
@@ -60,8 +61,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   void _submitReport() async {
-    log("masuk kan");
-    var url = Uri.parse("http://74b6a5b63136ac.lhrtunnel.link/aduan/");
+    log("da hell to you");
+    var url = Uri.parse("http://5101-219-92-148-53.ngrok.io/aduan/");
 
     var body = {
       "latitude": _latitude,
@@ -73,7 +74,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
     var response = await http.post(url,
         headers: {"content-type": "application/json"}, body: json.encode(body));
-    log(response.body.toString());
+
+    if (response.statusCode == 200) {
+      Get.to(SuccessPage());
+    }
   }
 
   @override
@@ -221,6 +225,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         label: const Text('Confirm'),
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
