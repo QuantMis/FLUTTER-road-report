@@ -27,6 +27,8 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
   late double _latitude;
   late double _longitude;
 
+  //marker
+
   void _onMapCreated(GoogleMapController _cntlr) async {
     var location = await geolocatorService().determinePosition();
     _latitude = location.latitude;
@@ -35,7 +37,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
     _controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-            target: LatLng(location.latitude, location.longitude), zoom: 25),
+            target: LatLng(location.latitude, location.longitude), zoom: 20),
       ),
     );
   }
@@ -50,10 +52,6 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         heading: 0,
         speed: 0,
         speedAccuracy: 0);
-
-    var m =
-        markers.firstWhere((p) => p.markerId == MarkerId('custom_marker_1'));
-    markers.remove(m);
     markers.add(
       Marker(
         markerId: MarkerId('custom_marker_1'),
@@ -61,6 +59,17 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
         draggable: true,
       ),
     );
+
+    // var m =
+    //     markers.firstWhere((p) => p.markerId == MarkerId('custom_marker_1'));
+    // markers.remove(m);
+    // markers.add(
+    //   Marker(
+    //     markerId: MarkerId('custom_marker_1'),
+    //     position: LatLng(_position.target.latitude, _position.target.longitude),
+    //     draggable: true,
+    //   ),
+    // );
     setState(() {
       _latitude = _position.target.latitude;
       _longitude = _position.target.longitude;
@@ -74,6 +83,10 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
 
   @override
   void initState() {
+    setState(() {
+      _latitude = location.latitude;
+      _longitude = location.longitude;
+    });
     super.initState();
   }
 
@@ -85,6 +98,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
         title: Text(
           "Pin Pothole Location",
@@ -95,7 +109,7 @@ class _ReportPotholeState extends State<ReportPotholeScreen> {
       body: GoogleMap(
         // zoomGesturesEnabled: true,
         initialCameraPosition: CameraPosition(
-            target: LatLng(location.latitude, location.longitude), zoom: 25),
+            target: LatLng(location.latitude, location.longitude), zoom: 20),
         mapType: MapType.normal,
         markers: getmarkers(),
         // markers: Set<Marker>.of(

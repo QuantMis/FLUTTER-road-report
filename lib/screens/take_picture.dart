@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +10,8 @@ import 'package:video_player/video_player.dart';
 import 'package:get/get.dart';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:awaslubang/screens/create_report_success.dart';
+import 'package:awaslubang/baseurl.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({Key? key, this.title}) : super(key: key);
@@ -61,23 +63,27 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   void _submitReport() async {
-    log("da hell to you");
-    var url = Uri.parse("http://5101-219-92-148-53.ngrok.io/aduan/");
-
-    var body = {
-      "latitude": _latitude,
-      "longitude": _longitude,
-      "address": _address,
-      "image_path": "_address",
-      "status": "created"
+    log("masukkan");
+    var url = Uri.parse(Baseurl.staging + 'aduans/');
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
     };
 
-    var response = await http.post(url,
-        headers: {"content-type": "application/json"}, body: json.encode(body));
+    var body = {
+      "latitude": _latitude.toString(),
+      "longitude": _longitude.toString(),
+      "alamat": _address,
+      "status": "hantar"
+    };
 
-    if (response.statusCode == 200) {
-      Get.to(SuccessPage());
-    }
+    var request = http.MultipartRequest('POST', url)
+      ..fields.addAll(body)
+      ..headers.addAll(headers)
+      ..files.add(
+          await http.MultipartFile.fromPath('gambar', _imageFileList![0].path));
+
+    var response = await request.send();
+    Get.to(SuccessPage());
   }
 
   @override
@@ -86,9 +92,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     var data = Get.arguments;
     _latitude = data[0];
     _longitude = data[1];
-    _address = "${data[2][0].locality}";
-
-    log(_address);
+    _address =
+        "${data[2][0].street}, ${data[2][0].subLocality}, ${data[2][0].locality}";
 
     super.initState();
   }
@@ -176,6 +181,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 47, 11, 131),
         title: Text(
           "Take Photo",

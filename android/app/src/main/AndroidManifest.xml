@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
    <application
-        android:label="awaslubang"
+        android:label="Awas Lubang"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
              <meta-data android:name="com.google.android.geo.API_KEY"

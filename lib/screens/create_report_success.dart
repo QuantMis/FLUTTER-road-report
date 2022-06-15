@@ -23,7 +23,7 @@ class _SuccessPageState extends State<SuccessPage> {
     theme = AppTheme.theme;
     Timer(
         Duration(seconds: 1),
-        () => Navigator.pushReplacement(context,
+        () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => PotholeNearMeScreen())));
   }
 
